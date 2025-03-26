@@ -60,16 +60,9 @@
             margin-top: 20px;
         }
         .news-item {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
+            padding: 24px 0;
             margin-bottom: 16px;
-            border: 1px solid #e1e4e8;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .news-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #eee;
         }
         .loading {
             display: none;
@@ -109,65 +102,25 @@
             display: none;
         }
         .sentiment {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 14px;
-            margin-top: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            transition: all 0.2s ease;
-        }
-        .sentiment:before {
-            content: '';
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 10px;
-            transition: transform 0.2s ease;
-        }
-        .sentiment:hover:before {
-            transform: scale(1.2);
+            display: block;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 16px;
         }
         .sentiment.POSITIVE {
-            background-color: #d1fae5;
-            color: #047857;
-            border: 1px solid #6ee7b7;
-        }
-        .sentiment.POSITIVE:before {
-            background-color: #10b981;
-            box-shadow: 0 0 0 2px #6ee7b7;
+            color: #059669;
         }
         .sentiment.NEGATIVE {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            border: 1px solid #fca5a5;
-        }
-        .sentiment.NEGATIVE:before {
-            background-color: #ef4444;
-            box-shadow: 0 0 0 2px #fca5a5;
+            color: #dc2626;
         }
         .sentiment.NEUTRAL {
-            background-color: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
-        }
-        .sentiment.NEUTRAL:before {
-            background-color: #6b7280;
-            box-shadow: 0 0 0 2px #d1d5db;
-        }
-        .sentiment:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            color: #4b5563;
         }
 
         .published-date {
             font-size: 0.9em;
             color: #666;
-            margin-top: 8px;
-            font-style: italic;
+            margin-top: 12px;
         }
     </style>
 </head>

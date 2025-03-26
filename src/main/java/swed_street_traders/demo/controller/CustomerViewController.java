@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import swed_street_traders.demo.service.MarketDataLoader;
-import swed_street_traders.demo.service.market.dao.StockData;
 
 import java.util.Map;
 
@@ -23,7 +23,8 @@ public class CustomerViewController {
     }
 
     @GetMapping("/market/{stockSymbol}")
-    public final Map<String, StockData> getMarketData(@PathVariable String stockSymbol){
+    @ResponseBody
+    public final Map<String, Object> getMarketData(@PathVariable String stockSymbol){
         return marketDataLoader.getData(stockSymbol);
     }
 }

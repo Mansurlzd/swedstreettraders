@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock News Viewer</title>
+    <title>Market Data Viewer</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -16,72 +16,128 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         h1 {
-            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+        .market-data {
+            font-size: 24px;
             margin-bottom: 20px;
         }
-        .content {
-            line-height: 1.6;
+        .data-item {
+            margin-bottom: 16px;
         }
-        select {
-            padding: 8px;
+        .label {
+            color: #666;
             font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            width: 200px;
+            margin-bottom: 4px;
         }
-        #newsContainer {
-            margin-top: 20px;
+        .value {
+            font-size: 28px;
+            font-weight: 600;
         }
-        .news-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+        .value.positive {
+            color: #059669;
+        }
+        .value.negative {
+            color: #dc2626;
         }
         .loading {
-            display: none;
+            font-size: 20px;
             color: #666;
-            font-style: italic;
         }
     </style>
 </head>
 <script>
-    function fetchMarket(selectedStock) {
-        const marketGraph = document.getElementById('market_graph');
-
-        marketGraph.innerHTML = '';
+    function fetchMarket() {
+        const stockSelect = document.getElementById('stockSelect');
+        const marketData = document.getElementById('marketData');
+        const loading = document.getElementById('loading');
+        const selectedStock = stockSelect.value;
+        const selectedStockName = stockSelect.options[stockSelect.selectedIndex].text;
 
         if (!selectedStock) {
+            marketData.innerHTML = '';
             return;
         }
 
+        loading.style.display = 'block';
+        marketData.style.display = 'none';
+
         fetch(`/customer/market/${selectedStock}`)
-            .then(response => console.log(response))
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                marketGraph.innerHTML = data;
+                loading.style.display = 'none';
+                marketData.style.display = 'block';
 
+                if (Object.keys(data).length === 0) {
+                    marketData.innerHTML = '<div class="no-data">No market data available for this stock.</div>';
+                    return;
+                }
 
+                let html = `<h2>${selectedStockName}</h2>`;
+                
+                // Display price data
+                if (data.price) {
+                    const price = data.price;
+                    html += createDataItem('Current Price', `$${price.current.toFixed(2)}`);
+                    
+                    const change = price.current - price.previous;
+                    const changePercent = (change / price.previous * 100).toFixed(2);
+                    const changeClass = change >= 0 ? 'positive' : 'negative';
+                    const changeSign = change >= 0 ? '+' : '';
+                    
+                    html += createDataItem('Price Change', 
+                        `<span class="${changeClass}">${changeSign}$${change.toFixed(2)} (${changeSign}${changePercent}%)</span>`);
+                }
+
+                // Display volume data
+                if (data.volume) {
+                    html += createDataItem('Volume', data.volume.current.toLocaleString());
+                    
+                    const volChange = ((data.volume.current - data.volume.previous) / data.volume.previous * 100).toFixed(2);
+                    const volChangeClass = volChange >= 0 ? 'positive' : 'negative';
+                    const volChangeSign = volChange >= 0 ? '+' : '';
+                    
+                    html += createDataItem('Volume Change', 
+                        `<span class="${volChangeClass}">${volChangeSign}${volChange}%</span>`);
+                }
+
+                marketData.innerHTML = html;
             })
             .catch(error => {
-                marketGraph.innerHTML = 'Error loading news. Please try again.';
                 console.error('Error:', error);
+                loading.style.display = 'none';
+                marketData.style.display = 'block';
+                marketData.innerHTML = '<div class="error">Error loading market data.</div>';
             });
+    }
+
+    function createDataItem(label, value) {
+        return `
+            <div class="data-item">
+                <div class="label">${label}</div>
+                <div class="value">${value}</div>
+            </div>
+        `;
     }
 </script>
 
 <body>
     <div class="container">
-        <h1 id="selectedStock">IBM</h1>
-        <div id="market_graph">
-            <script>
-                fetchMarket("IBM");
-            </script>
+        <h1>Market Data</h1>
+        <div class="content">
+            <select id="stockSelect" onchange="fetchMarket()">
+                <option value="">Select a stock</option>
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="GOOGL">Google (GOOGL)</option>
+                <option value="MSFT">Microsoft (MSFT)</option>
+                <option value="TSLA">Tesla (TSLA)</option>
+                <option value="AMZN">Amazon (AMZN)</option>
+            </select>
+            <div id="loading" class="loading" style="display: none;">Loading market data...</div>
+            <div id="marketData" class="market-data"></div>
         </div>
     </div>
 </body>
