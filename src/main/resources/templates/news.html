@@ -1,11 +1,15 @@
-
-
-<div class="news">
-    <h3>News</h3>
-    <div id="stockInfo" class="stock-info"></div>
-    <div id="loading" class="loading">Fetching latest news...</div>
-    <div id="newsContainer"></div>
-    <!--        <p th:each="newsItem : ${news}" th:text="${newsItem}"></p>-->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-round">
+            <div class="card-body">
+                <div class="card-head-row card-tools-still-right">
+                    <div class="card-title">News</div>
+                </div>
+                <div id="loading" class="loading">Fetching latest news...</div>
+                <div class="card-list py-4" id="newsContainer"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -13,20 +17,15 @@
         const stockSelect = document.getElementById('stockSelect');
         const loading = document.getElementById('loading');
         const newsContainer = document.getElementById('newsContainer');
-        const stockInfo = document.getElementById('stockInfo');
         const selectedStock = stockSelect.value;
-        const selectedStockName = stockSelect.options[stockSelect.selectedIndex].text;
+
+        newsContainer.innerHTML = '';
 
         if (!selectedStock) {
-            newsContainer.innerHTML = '';
-            stockInfo.style.display = 'none';
             return;
         }
 
         loading.style.display = 'block';
-        newsContainer.innerHTML = '';
-        stockInfo.style.display = 'block';
-        stockInfo.textContent = `Latest News for ${selectedStockName}`;
 
         fetch(`/api/news/${selectedStock}`)
             .then(response => response.json())
@@ -39,7 +38,7 @@
                 data.forEach((newsItem, index) => {
                     const newsDiv = document.createElement('div');
                     newsDiv.className = 'news-item';
-                    newsDiv.style.animationDelay = `${index * 0.1}s`;
+                    // newsDiv.style.animationDelay = `${index * 0.1}s`;
 
                     // Clean and format the description
                     let cleanDescription = newsItem.description;
@@ -47,35 +46,37 @@
                         cleanDescription = cleanDescription.substring(0, 297) + '...';
                     }
 
-                    newsDiv.textContent = cleanDescription;
-
                     // Add sentiment badge
-                    const sentimentBadge = document.createElement('span');
                     const [sentiment, score] = newsItem.sentiment.split(' ');
-                    sentimentBadge.className = `sentiment ${sentiment}`;
 
                     // Format the score to percentage
                     const scoreNum = parseFloat(score.replace('(', '').replace(')', ''));
                     const scorePercent = Math.round(scoreNum * 100);
 
-                    sentimentBadge.textContent = `${sentiment} ${scorePercent}%`;
-                    newsDiv.appendChild(sentimentBadge);
-
-                    // Add published date
-                    const dateDiv = document.createElement('div');
-                    dateDiv.className = 'published-date';
+                    // Post date
                     const date = new Date(newsItem.publishedAt);
-                    dateDiv.textContent = date.toLocaleString();
-                    newsDiv.appendChild(dateDiv);
 
-                    newsContainer.appendChild(newsDiv);
+                    newsContainer.appendChild(createPost(date.toLocaleString(), cleanDescription, sentiment, scorePercent));
                 });
             })
             .catch(error => {
                 loading.style.display = 'none';
-                stockInfo.style.display = 'none';
                 newsContainer.innerHTML = '<div class="no-news">Error loading news. Please try again.</div>';
                 console.error('Error:', error);
             });
+    }
+
+    function createPost(date, description, sentimentLevel, score){
+        const postDiv = document.createElement('div');
+        postDiv.className = 'item-list'
+        const textLevel = sentimentLevel == 'negative' ? 'danger' : sentimentLevel == 'positive' ? 'success' : 'primary';
+
+        postDiv.innerHTML =
+            '<div class="info-user ms-3">' +
+            '    <div class="username">' + date + '</div>' +
+            '    <div class="status">' + description + '</div>' +
+            '</div>' +
+            '<span class="badge badge-'+ textLevel +'">' + score + '% ' + sentimentLevel + '</span>'
+        return postDiv;
     }
 </script>
