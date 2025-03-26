@@ -76,35 +76,14 @@
                     return;
                 }
 
-                let html = `<h2>${selectedStockName}</h2>`;
-                
-                // Display price data
-                if (data.price) {
-                    const price = data.price;
-                    html += createDataItem('Current Price', `$${price.current.toFixed(2)}`);
-                    
-                    const change = price.current - price.previous;
-                    const changePercent = (change / price.previous * 100).toFixed(2);
-                    const changeClass = change >= 0 ? 'positive' : 'negative';
-                    const changeSign = change >= 0 ? '+' : '';
-                    
-                    html += createDataItem('Price Change', 
-                        `<span class="${changeClass}">${changeSign}$${change.toFixed(2)} (${changeSign}${changePercent}%)</span>`);
-                }
-
-                // Display volume data
-                if (data.volume) {
-                    html += createDataItem('Volume', data.volume.current.toLocaleString());
-                    
-                    const volChange = ((data.volume.current - data.volume.previous) / data.volume.previous * 100).toFixed(2);
-                    const volChangeClass = volChange >= 0 ? 'positive' : 'negative';
-                    const volChangeSign = volChange >= 0 ? '+' : '';
-                    
-                    html += createDataItem('Volume Change', 
-                        `<span class="${volChangeClass}">${volChangeSign}${volChange}%</span>`);
-                }
-
-                marketData.innerHTML = html;
+                Object.entries(data).forEach(([date, value]) => {
+                    const spanElement = document.createElement("span");
+                    spanElement.innerHTML = `
+          <div style="display: block; padding: 10px; border-bottom: 1px solid #ccc;">
+            <strong>${date}</strong> - ${value}
+          </div>`;
+                    marketData.appendChild(spanElement);
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -112,15 +91,6 @@
                 marketData.style.display = 'block';
                 marketData.innerHTML = '<div class="error">Error loading market data.</div>';
             });
-    }
-
-    function createDataItem(label, value) {
-        return `
-            <div class="data-item">
-                <div class="label">${label}</div>
-                <div class="value">${value}</div>
-            </div>
-        `;
     }
 </script>
 

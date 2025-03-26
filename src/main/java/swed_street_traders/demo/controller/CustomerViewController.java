@@ -24,7 +24,7 @@ public class CustomerViewController {
 
     @GetMapping("/market/{stockSymbol}")
     @ResponseBody
-    public final Map<String, Object> getMarketData(@PathVariable String stockSymbol){
+    public final Map<String, String> getMarketData(@PathVariable String stockSymbol){
         return marketDataLoader.getData(stockSymbol);
     }
 }
