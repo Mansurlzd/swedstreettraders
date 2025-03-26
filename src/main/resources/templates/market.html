@@ -1,0 +1,38 @@
+<div class="chart" id="marketData">
+    📈 Chart Placeholder
+</div>
+
+<script>
+    function fetchMarket() {
+        const stockSelect = document.getElementById('stockSelect');
+        const marketData = document.getElementById('marketData');
+        const selectedStock = stockSelect.value;
+
+        marketData.innerHTML = '';
+        if (!selectedStock) {
+            return;
+        }
+
+        fetch(`/market/${selectedStock}`)
+            .then(response => response.json())
+            .then(data => {
+                if (Object.keys(data).length === 0) {
+                    marketData.innerHTML = '<div class="no-data">No market data available for this stock.</div>';
+                    return;
+                }
+
+                Object.entries(data).forEach(([date, value]) => {
+                    const spanElement = document.createElement("span");
+                    spanElement.innerHTML = `
+          <div>
+            <strong>${date}</strong> - ${value}
+          </div>`;
+                    marketData.appendChild(spanElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                marketData.innerHTML = '<div class="error">Error loading market data.</div>';
+            });
+    }
+</script>

@@ -34,7 +34,7 @@ public class MarketDataLoader {
             if (response != null && response.getTimeSeriesDaily() != null) {
                 Map<String, String> openValues = new LinkedHashMap<>();
                 response.getTimeSeriesDaily().getDailyData().forEach((date, stockDetails) -> {
-                    openValues.put(date, stockDetails.getOpen());
+                    openValues.put(date, stockDetails.getClose());
                 });
                 return openValues;
             }

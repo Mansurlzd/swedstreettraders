@@ -11,13 +11,12 @@ import swed_street_traders.demo.service.MarketDataLoader;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/customer")
 public class CustomerViewController {
 
     @Autowired
     private MarketDataLoader marketDataLoader;
 
-    @GetMapping("")
+    @GetMapping("/customer")
     public final String getCustomerPage(){
         return "customer";
     }

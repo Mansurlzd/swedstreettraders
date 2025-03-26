@@ -1,0 +1,82 @@
+body {
+    background: black;
+    color: orange;
+    font-family: Arial, sans-serif;
+}
+
+.stock-container {
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #121212;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(255, 165, 0, 0.5);
+}
+
+.stock-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: orange;
+}
+
+.stock-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.stock-date {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.chart {
+    height: 150px;
+    margin: 10px 0;
+    background: #222;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 150px;
+    color: white;
+}
+
+.timeframes button {
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.buy, .sell {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buy {
+    background: orange;
+    color: black;
+}
+
+.sell {
+    background: cyan;
+    color: black;
+}
+
+.investment-info, .news {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.news p {
+    font-size: 12px;
+    opacity: 0.8;
+}
