@@ -35,7 +35,6 @@ public class HomeController {
     @GetMapping("/api/sentiment")
     @ResponseBody
     public Map<String, String> analyzeSentiment(String text) {
-
         Map<String, String>  sen = sentimentAnalysisService.analyzeSentiments(List.of(text));
         return sen;
     }

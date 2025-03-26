@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 public class MarketDataLoader {
     private static final String BASE_URL = "https://www.alphavantage.co/query";
-    private static final String DAILY = "Time Series (Daily)";
 
     private final RestTemplate restTemplate;
 
@@ -26,8 +25,10 @@ public class MarketDataLoader {
             String uri = UriComponentsBuilder
                     .fromHttpUrl(BASE_URL)
                     .queryParam("function", "TIME_SERIES_DAILY")
-                    .queryParam("symbol", stock)
-                    .queryParam("apikey", "Z2VDY68B6AGTEGXK")
+//                    .queryParam("symbol", stock)
+//                    .queryParam("apikey", "Z2VDY68B6AGTEGXK")
+                    .queryParam("symbol", "IBM")
+                    .queryParam("apikey", "demo")
                     .toUriString();
 
             StockResponse response = restTemplate.getForObject(uri, StockResponse.class);

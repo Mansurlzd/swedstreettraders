@@ -1,0 +1,81 @@
+
+
+<div class="news">
+    <h3>News</h3>
+    <div id="stockInfo" class="stock-info"></div>
+    <div id="loading" class="loading">Fetching latest news...</div>
+    <div id="newsContainer"></div>
+    <!--        <p th:each="newsItem : ${news}" th:text="${newsItem}"></p>-->
+</div>
+
+<script>
+    function fetchNews() {
+        const stockSelect = document.getElementById('stockSelect');
+        const loading = document.getElementById('loading');
+        const newsContainer = document.getElementById('newsContainer');
+        const stockInfo = document.getElementById('stockInfo');
+        const selectedStock = stockSelect.value;
+        const selectedStockName = stockSelect.options[stockSelect.selectedIndex].text;
+
+        if (!selectedStock) {
+            newsContainer.innerHTML = '';
+            stockInfo.style.display = 'none';
+            return;
+        }
+
+        loading.style.display = 'block';
+        newsContainer.innerHTML = '';
+        stockInfo.style.display = 'block';
+        stockInfo.textContent = `Latest News for ${selectedStockName}`;
+
+        fetch(`/api/news/${selectedStock}`)
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                if (data.length === 0) {
+                    newsContainer.innerHTML = '<div class="no-news">No news available for this stock at the moment.</div>';
+                    return;
+                }
+                data.forEach((newsItem, index) => {
+                    const newsDiv = document.createElement('div');
+                    newsDiv.className = 'news-item';
+                    newsDiv.style.animationDelay = `${index * 0.1}s`;
+
+                    // Clean and format the description
+                    let cleanDescription = newsItem.description;
+                    if (cleanDescription.length > 300) {
+                        cleanDescription = cleanDescription.substring(0, 297) + '...';
+                    }
+
+                    newsDiv.textContent = cleanDescription;
+
+                    // Add sentiment badge
+                    const sentimentBadge = document.createElement('span');
+                    const [sentiment, score] = newsItem.sentiment.split(' ');
+                    sentimentBadge.className = `sentiment ${sentiment}`;
+
+                    // Format the score to percentage
+                    const scoreNum = parseFloat(score.replace('(', '').replace(')', ''));
+                    const scorePercent = Math.round(scoreNum * 100);
+
+                    sentimentBadge.textContent = `${sentiment} ${scorePercent}%`;
+                    newsDiv.appendChild(sentimentBadge);
+
+                    // Add published date
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'published-date';
+                    const date = new Date(newsItem.publishedAt);
+                    dateDiv.textContent = date.toLocaleString();
+                    newsDiv.appendChild(dateDiv);
+
+                    newsContainer.appendChild(newsDiv);
+                });
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                stockInfo.style.display = 'none';
+                newsContainer.innerHTML = '<div class="no-news">Error loading news. Please try again.</div>';
+                console.error('Error:', error);
+            });
+    }
+</script>

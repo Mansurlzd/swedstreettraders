@@ -9,7 +9,7 @@
 <body>
 
 <div class="stock-container">
-   <select id="stockSelect" onchange="fetchMarket()">
+   <select id="stockSelect" onchange="stockChanged()">
        <option value="">Select a stock</option>
        <option value="AAPL">Apple (AAPL)</option>
        <option value="GOOGL">Google (GOOGL)</option>
@@ -25,7 +25,6 @@
         <button>1M</button>
         <button>3M</button>
         <button>6M</button>
-        <button>YTD</button>
         <button>1Y</button>
         <button>All</button>
     </div>
@@ -37,25 +36,26 @@
 
     <!-- Investment Info -->
     <div class="investment-info">
-        <h3>Investeringu Info</h3>
+        <h3>Technical analysis indicators</h3>
         <ul>
-            <li>Väärtus</li>
-            <li>Päevane muutus</li>
-            <li>Kasum</li>
-            <li>Saldo / Positsioon</li>
-            <li>Soetushind</li>
-            <li>Soetushind/üha</li>
+            <li>50 day moving average</li>
+            <li>200 day moving average</li>
+            <li>MACD</li>
+            <li>RSI</li>
+            <li>OBV</li>
         </ul>
     </div>
 
-    <!-- News Section -->
-    <div class="news">
-        <h3>News SSS</h3>
-<!--        <p th:each="newsItem : ${news}" th:text="${newsItem}"></p>-->
-    </div>
-</div>
+    <div th:replace="news.html"></div>
 
-<script th:src="@{/script.js}"></script>
+</div>
 </body>
 </html>
+
+<script>
+    function stockChanged() {
+        fetchMarket();
+        fetchNews();
+    }
+</script>
 
