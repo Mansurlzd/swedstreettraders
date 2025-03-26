@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spring Boot Application</title>
+    <title>Stock News Viewer</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -27,14 +27,77 @@
         .content {
             line-height: 1.6;
         }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            width: 200px;
+        }
+        #newsContainer {
+            margin-top: 20px;
+        }
+        .news-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .loading {
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Spring Boot Application</h1>
+        <h1>Stock News Viewer</h1>
         <div class="content">
-            <p th:text="${message}">This is a sample Spring Boot application page.</p>
+            <select id="stockSelect" onchange="fetchNews()">
+                <option value="">Select a stock</option>
+                <option value="AAPL">Apple (AAPL)</option>
+                <option value="GOOGL">Google (GOOGL)</option>
+                <option value="MSFT">Microsoft (MSFT)</option>
+                <option value="TSLA">Tesla (TSLA)</option>
+                <option value="AMZN">Amazon (AMZN)</option>
+            </select>
+            <div id="loading" class="loading">Loading news...</div>
+            <div id="newsContainer"></div>
         </div>
     </div>
+
+    <script>
+        function fetchNews() {
+            const stockSelect = document.getElementById('stockSelect');
+            const loading = document.getElementById('loading');
+            const newsContainer = document.getElementById('newsContainer');
+            const selectedStock = stockSelect.value;
+
+            if (!selectedStock) {
+                newsContainer.innerHTML = '';
+                return;
+            }
+
+            loading.style.display = 'block';
+            newsContainer.innerHTML = '';
+
+            fetch(`/api/news/${selectedStock}`)
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    data.forEach(description => {
+                        const newsItem = document.createElement('div');
+                        newsItem.className = 'news-item';
+                        newsItem.textContent = description;
+                        newsContainer.appendChild(newsItem);
+                    });
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    newsContainer.innerHTML = 'Error loading news. Please try again.';
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 </body>
 </html>
