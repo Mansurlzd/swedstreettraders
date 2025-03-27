@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import swed_street_traders.demo.model.NewsItem;
+import swed_street_traders.demo.service.MarketDataLoader;
 import swed_street_traders.demo.service.NewsService;
 import swed_street_traders.demo.service.SentimentAnalysisService;
 
@@ -21,9 +22,17 @@ public class HomeController {
     @Autowired
     private SentimentAnalysisService sentimentAnalysisService;
 
-    @GetMapping("/")
+    @Autowired
+    private MarketDataLoader marketDataLoader;
+
+    @GetMapping("/index")
     public String home() {
         return "index";
+    }
+
+    @GetMapping("/")
+    public final String getCustomerPage(){
+        return "customer";
     }
 
     @GetMapping("/api/news/{stockSymbol}")
@@ -37,5 +46,11 @@ public class HomeController {
     public Map<String, String> analyzeSentiment(String text) {
         Map<String, String>  sen = sentimentAnalysisService.analyzeSentiments(List.of(text));
         return sen;
+    }
+
+    @GetMapping("/market/{stockSymbol}")
+    @ResponseBody
+    public final Map<String, String> getMarketData(@PathVariable String stockSymbol){
+        return marketDataLoader.getData(stockSymbol);
     }
 }
