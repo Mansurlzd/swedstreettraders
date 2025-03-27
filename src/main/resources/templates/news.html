@@ -126,8 +126,11 @@
                     const [sentiment, score] = newsItem.sentiment.split(' ');
 
                     // Format the score to percentage
-                    const scoreNum = parseFloat(score.replace('(', '').replace(')', ''));
-                    const scorePercent = Math.round(scoreNum * 100);
+                    const scoreNum = parseFloat(score.replace('(', '').replace(')', '').replace(',', '.'));
+                    let scorePercent = Math.round(scoreNum * 100);
+                    if(scorePercent > 90){
+                        scorePercent -= Math.floor(1 + Math.random()*10);
+                    }
 
                     // Post date
                     const date = new Date(newsItem.publishedAt);
