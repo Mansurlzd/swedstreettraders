@@ -1,13 +1,9 @@
-<div class="chart" id="marketData">
-    📈 Chart Placeholder
-</div>
-
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="card card-round">
             <div class="card-header">
                 <div class="card-head-row">
-                    <div class="card-title">User Statistics</div>
+                    <div class="card-title" id="stock-name"></div>
                     <div class="card-tools">
                         <a
                                 href="#"
@@ -40,8 +36,9 @@
 <script>
     function fetchMarket() {
         const stockSelect = document.getElementById('stockSelect');
-        const marketData = document.getElementById('marketData');
+        const marketData = document.getElementById('statisticsChart');
         const selectedStock = stockSelect.value;
+        document.getElementById('stock-name').innerText = stockSelect.options[stockSelect.selectedIndex].text;
 
         marketData.innerHTML = '';
         if (!selectedStock) {
@@ -55,19 +52,72 @@
                     marketData.innerHTML = '<div class="no-data">No market data available for this stock.</div>';
                     return;
                 }
-
-                Object.entries(data).forEach(([date, value]) => {
-                    const spanElement = document.createElement("span");
-                    spanElement.innerHTML = `
-          <div>
-            <strong>${date}</strong> - ${value}
-          </div>`;
-                    marketData.appendChild(spanElement);
-                });
+                createChart(marketData, data);
             })
             .catch(error => {
                 console.error('Error:', error);
                 marketData.innerHTML = '<div class="error">Error loading market data.</div>';
             });
+    }
+
+    function createChart(marketData, data) {
+        const ctx = marketData.getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Stock Price',
+                    data: Object.values(data),
+                    borderColor: '#f3545d',
+                    pointBackgroundColor: 'rgba(243, 84, 93, 0.6)',
+                    pointRadius: 0,
+                    backgroundColor: 'rgba(243, 84, 93, 0.4)',
+                    fill: true,
+                    borderWidth: 2
+                }]
+            },
+            options : {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    bodySpacing: 4,
+                    mode:"nearest",
+                    intersect: 0,
+                    position:"nearest",
+                    xPadding:10,
+                    yPadding:10,
+                    caretPadding:10
+                },
+                layout:{
+                    padding:{left:5,right:5,top:15,bottom:15}
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            fontStyle: "500",
+                            beginAtZero: false,
+                            maxTicksLimit: 5,
+                            padding: 10
+                        },
+                        gridLines: {
+                            drawTicks: false,
+                            display: false
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            zeroLineColor: "transparent"
+                        },
+                        ticks: {
+                            padding: 10,
+                            fontStyle: "500"
+                        }
+                    }]
+                }
+        }});
     }
 </script>
