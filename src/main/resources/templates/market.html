@@ -34,11 +34,9 @@
 </div>
 
 <script>
-    function fetchMarket() {
-        const stockSelect = document.getElementById('stockSelect');
+    function fetchMarket(selectedStock, stockName) {
         const marketData = document.getElementById('statisticsChart');
-        const selectedStock = stockSelect.value;
-        document.getElementById('stock-name').innerText = stockSelect.options[stockSelect.selectedIndex].text;
+        document.getElementById('stock-name').innerText = stockName;
 
         marketData.innerHTML = '';
         if (!selectedStock) {

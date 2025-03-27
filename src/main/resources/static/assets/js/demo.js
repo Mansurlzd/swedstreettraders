@@ -192,8 +192,8 @@ Circles.create({
 //Notify
 $.notify({
 	icon: 'icon-bell',
-	title: 'Kaiadmin',
-	message: 'Premium Bootstrap 5 Admin Dashboard',
+	title: 'Mario',
+	message: 'Have you already checked news on Apple?',
 },{
 	type: 'secondary',
 	placement: {

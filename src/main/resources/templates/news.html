@@ -1,5 +1,58 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4">
+        <div class="card card-round">
+            <div class="card-body">
+                <div class="card-head-row card-tools-still-right">
+                    <div class="card-title">Technical analysis indicators</div>
+                </div>
+                <div class="card-list selectgroup selectgroup-pills">
+                    <label class="selectgroup-item">
+                        <input
+                                type="checkbox"
+                                name="value"
+                                class="selectgroup-input"
+                                checked="true"
+                        />
+                        <span class="selectgroup-button">50 day moving average</span>
+                    </label>
+                    <label class="selectgroup-item">
+                        <input
+                                type="checkbox"
+                                name="value"
+                                class="selectgroup-input"
+                        />
+                        <span class="selectgroup-button">200 day moving average</span>
+                    </label>
+                    <label class="selectgroup-item">
+                        <input
+                                type="checkbox"
+                                name="value"
+                                class="selectgroup-input"
+                        />
+                        <span class="selectgroup-button">MACD</span>
+                    </label>
+                    <label class="selectgroup-item">
+                        <input
+                                type="checkbox"
+                                name="value"
+                                class="selectgroup-input"
+                        />
+                        <span class="selectgroup-button">RSI</span>
+                    </label>
+                    <label class="selectgroup-item">
+                        <input
+                                type="checkbox"
+                                name="value"
+                                class="selectgroup-input"
+                        />
+                        <span class="selectgroup-button">OBV</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
         <div class="card card-round">
             <div class="card-body">
                 <div class="card-head-row card-tools-still-right">
@@ -13,11 +66,9 @@
 </div>
 
 <script>
-    function fetchNews() {
-        const stockSelect = document.getElementById('stockSelect');
+    function fetchNews(selectedStock, selectedStockName) {
         const loading = document.getElementById('loading');
         const newsContainer = document.getElementById('newsContainer');
-        const selectedStock = stockSelect.value;
 
         newsContainer.innerHTML = '';
 
@@ -26,6 +77,7 @@
         }
 
         loading.style.display = 'block';
+        loading.textContent = `Fetching latest news for ${selectedStockName}...`;
 
         fetch(`/api/news/${selectedStock}`)
             .then(response => response.json())
